@@ -22,12 +22,12 @@
         }
 
         // Only chrome android vs windows, not working ios
-        handlePermission();
-        function handlePermission() {
-            navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
-                logger(result.state);
-            });
-        }
+        // handlePermission();
+        // function handlePermission() {
+        //     navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+        //         logger(result.state);
+        //     });
+        // }
         ///////////////////////////////////////////////////
 
         recursiveCurrentLocation();
