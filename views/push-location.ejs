@@ -25,7 +25,7 @@
         function handlePermission() {
             navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
                 logger(result.state);
-                if (result.state == 'granted') {
+                if (result.state == 'granted' || result.state == 'prompt') {
                     recursiveCurrentLocation();
                 }
             });
