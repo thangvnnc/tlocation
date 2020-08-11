@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const server = http.Server(app);
 const dbConnect = require('./common/connection');
-dbConnect.init()
 
 // Set ejs
 app.set('view engine', 'ejs');
