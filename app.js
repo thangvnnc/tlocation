@@ -6,9 +6,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
 const server = http.Server(app);
-const dbConnect = require('./common/connection');
-const enforce = require('express-sslify');
-app.use(enforce.HTTPS());
+// const dbConnect = require('./common/connection');
 
 // Set ejs
 app.set('view engine', 'ejs');
