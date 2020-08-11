@@ -21,15 +21,15 @@
             $('.logger').val(valueLogger);
         }
 
-        handlePermission();
-        function handlePermission() {
-            navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
-                logger(result.state);
-                if (result.state == 'granted' || result.state == 'prompt') {
+        // handlePermission();
+        // function handlePermission() {
+        //     navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+        //         logger(result.state);
+        //         if (result.state == 'granted' || result.state == 'prompt') {
                     recursiveCurrentLocation();
-                }
-            });
-        }
+        //         }
+        //     });
+        // }
 
         function recursiveCurrentLocation() {
             setTimeout(() => {
