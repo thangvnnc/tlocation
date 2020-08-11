@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const app = express();
 const server = http.Server(app);
 const dbConnect = require('./common/connection');
+const enforce = require('express-sslify');
+app.use(enforce.HTTPS());
 
 // Set ejs
 app.set('view engine', 'ejs');
@@ -62,19 +64,3 @@ app.get('/show', (req, res) => {
 app.get('/show-location', (req, res) => {
     res.render('show-location');
 });
-
-
-// var ids = [];
-// app.post('/register', (req, res) => {
-//     var body = req.body;
-//     var ipId = body['ip-id'];
-//     ids.push(ipId);
-//     res.send({
-//         status: 0,
-//         message: ""
-//     });
-// });
-
-// app.get('/show-map', (req, res) => {
-//     res.render('show-map');
-// })

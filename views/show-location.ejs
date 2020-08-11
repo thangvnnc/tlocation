@@ -9,8 +9,9 @@
 
 <body>
     <h1>Xem vị trí</h1>
+    <div><lable><input class="ip-move-camera" checked type="checkbox"/>: Di chuyển màn hình đến vị trí hiện tại</lable></div>
     <textarea class="logger" style="display: none; height: 200px; width: 480px;"></textarea>
-    <div id="map" style="width: 800px; height: calc(100% - 58px);"></div>
+    <div id="map" style="width: 100%; height: calc(100% - 78px);"></div>
     <script type="text/javascript">
         var socket = io();
 
@@ -42,7 +43,13 @@
 
             const map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 4,
-                center: currentLatLng
+                center: currentLatLng,
+                zoomControl: true,
+                mapTypeControl: true,
+                scaleControl: true,
+                streetViewControl: true,
+                rotateControl: true,
+                fullscreenControl: true
             });
 
             var marker = new google.maps.Marker({
@@ -58,8 +65,13 @@
                     position: currentLatLng,
                     map
                 });
+                
+                var moveCenterMap = $('.ip-move-camera').prop("checked");
+                if (moveCenterMap)
+                {
+                    map.setCenter(currentLatLng);
+                }
                 logger("lat: " + data.lat + " lng: " + data.lng);
-                map.setCenter(currentLatLng);
             });
         }        
     </script>
