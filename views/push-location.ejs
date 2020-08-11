@@ -1,0 +1,87 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <title>Đang định vị</title>
+</head>
+
+<body>
+    <h1>Đang định vị liên tục</h1>
+    <textarea class="logger" style="height: 640px; width: 480px;"></textarea>
+    <script src="socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        var socket = io();
+        var params = getQueryParams(document.location.search);
+
+        var idLogger = 0;
+        function logger(msg) {
+            var valueLogger = $('.logger').val();
+            valueLogger += '\n' + (++idLogger) + ': ' + msg;
+            $('.logger').val(valueLogger);
+        }
+
+        handlePermission();
+        function handlePermission() {
+            navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+                logger(result.state);
+                if (result.state == 'granted') {
+                    recursiveCurrentLocation();
+                }
+            });
+        }
+
+        function recursiveCurrentLocation() {
+            setTimeout(() => {
+                // Try HTML5 geolocation.
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+
+                        var data = {
+                            id: params['id'],
+                            lat: pos.lat,
+                            lng: pos.lng,
+                            note: '',
+                            date: new Date()
+                        }
+
+                        socket.emit('set-location-change', data);
+                        recursiveCurrentLocation();
+                        logger("lat: " + pos.lat + " lng: " + pos.lng);
+                    }, function () {
+                        handleLocationError(true);
+                    }, {
+                        enableHighAccuracy: true
+                    });
+                } else {
+                    // Browser doesn't support Geolocation
+                    handleLocationError(false);
+                }
+            }, 1000)
+
+        }
+
+        function handleLocationError(browserHasGeolocation) {
+            logger(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+        }
+
+        function getQueryParams(qs) {
+            qs = qs.split('+').join(' ');
+            var params = {},
+                tokens,
+                re = /[?&]?([^=]+)=([^&]*)/g;
+            while (tokens = re.exec(qs)) {
+                params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+            }
+            return params;
+        }
+    </script>
+</body>
+
+</html>

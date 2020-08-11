@@ -30,25 +30,39 @@ server.listen(PORT, (error) =>
 
 // Socket io
 var io = require("socket.io")(server);
-io.on('connection', (socket) => {
-    console.log('a user connected');
-    
+io.on('connection', (socket) => {    
     socket.on('register', (data) => {
         socket.join(data.id);
     });
 
-    socket.on('sendNotify', (data) => {
-        io.to(data.id).emit({
+    socket.on('set-location-change', (data) => {
+        let dataResult = {
             id: data.id,
             lat: data.lat,
-            lng: data.lng
-        })
+            lng: data.lng,
+            note: data.note,
+            date: data.date
+        }
+        io.to(data.id).emit('notify-location-change', dataResult);
     })
 });
 
 app.get('/', (req, res) => {
     res.render('index');
 });
+
+app.get('/push-location', (req, res) => {
+    res.render('push-location');
+});
+
+app.get('/show', (req, res) => {
+    res.render('show');
+});
+
+app.get('/show-location', (req, res) => {
+    res.render('show-location');
+});
+
 
 // var ids = [];
 // app.post('/register', (req, res) => {

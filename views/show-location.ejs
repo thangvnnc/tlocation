@@ -1,0 +1,68 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap&libraries=&v=weekly" defer></script>
+    <title>Xem vị trí</title>
+</head>
+
+<body>
+    <h1>Xem vị trí</h1>
+    <textarea class="logger" style="height: 200px; width: 480px;"></textarea>
+    <div id="map" style="width: 800px; height: 600px;"></div>
+    <script type="text/javascript">
+        var socket = io();
+
+        var params = getQueryParams(document.location.search);
+        var idLogger = 0;
+        
+        function logger(msg) {
+            var valueLogger = $('.logger').val();
+            valueLogger += '\n' + (++idLogger) + ': ' + msg;
+            $('.logger').val(valueLogger);
+        }
+
+        function getQueryParams(qs) {
+            qs = qs.split('+').join(' ');
+            var params = {},
+                tokens,
+                re = /[?&]?([^=]+)=([^&]*)/g;
+            while (tokens = re.exec(qs)) {
+                params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+            }
+            return params;
+        }
+
+        socket.emit('register', {id: params['id']});
+
+        // Map load 
+        function initMap() {
+            var currentLatLng = { lat: 0, lng: 0 };
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 4,
+                center: currentLatLng
+            });
+
+            var marker = new google.maps.Marker({
+                position: currentLatLng,
+                map
+            });
+
+            socket.on('notify-location-change', function (data) {
+                currentLatLng = { lat: data.lat, lng: data.lng };
+                marker.setMap(null);
+                marker = null;
+                marker = new google.maps.Marker({
+                    position: currentLatLng,
+                    map
+                });
+                logger("lat: " + data.lat + " lng: " + data.lng);
+                map.setCenter(currentLatLng);
+            });
+        }        
+    </script>
+</body>
+
+</html>

@@ -1,27 +1,27 @@
 <html>
     <head>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <title>Đăng ký theo dõi vị trí định vị</title>
+        <title>Thông tin vị trí định vị</title>
     </head>
     
     <body>
         <form method="POST" action="" onsubmit="return false;">
-            <div><h1>Đăng ký</h1></div>
+            <div><h1>Thông tin vị trí định vị</h1></div>
             <div>
                 <lable>
-                Tên người đăng ký: <input class="ip-id" type="text" value="thang"/>
+                Tên người định vị: <input class="ip-id" type="text" value="thang"/>
                 </lable>
             </div>
-            <div><button class="btn-register" type="button">Register</button></div>
+            <div><button class="btn-show" type="button">Xem</button></div>
         </form>
     </body>
 
     <script>
-        $('.btn-register').on('click', function (event) {
+        $('.btn-show').on('click', function (event) {
             let data = {
                 id: $('.ip-id').val()
             }
-            window.location.href = '/push-location?id=' + data.id;
+            window.location.href = '/show-location?id=' + data.id;
             return false;
         })
     </script>
