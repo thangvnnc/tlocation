@@ -1,5 +1,5 @@
 'use strict';
-const PORT = process.env.PORT || 9999;
+const PORT = process.env.PORT || 8080;
 const http = require('http');
 const express = require('express');
 const path = require('path');
@@ -30,3 +30,37 @@ server.listen(PORT, (error) =>
 
 // Socket io
 var io = require("socket.io")(server);
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    
+    socket.on('register', (data) => {
+        socket.join(data.id);
+    });
+
+    socket.on('sendNotify', (data) => {
+        io.to(data.id).emit({
+            id: data.id,
+            lat: data.lat,
+            lng: data.lng
+        })
+    })
+});
+
+app.get('/', (req, res) => {
+    res.render('index');
+});
+
+// var ids = [];
+// app.post('/register', (req, res) => {
+//     var body = req.body;
+//     var ipId = body['ip-id'];
+//     ids.push(ipId);
+//     res.send({
+//         status: 0,
+//         message: ""
+//     });
+// });
+
+// app.get('/show-map', (req, res) => {
+//     res.render('show-map');
+// })
